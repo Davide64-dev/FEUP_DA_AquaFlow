@@ -6,13 +6,14 @@
 
 int main() {
 
-    // Print current working directory
-    std::cout << "Current Working Directory: " << std::filesystem::current_path() << std::endl;
-
-    GraphConstructor temp = GraphConstructor("../LargeDataSet/Cities.csv", "", "", "");
+    GraphConstructor temp = GraphConstructor("../LargeDataSet/Cities.csv", "../LargeDataSet/Reservoir.csv", "../LargeDataSet/Stations.csv", "");
 
 
-    Graph<Element> graph = temp.createGraph();
+    Graph<std::string> graph = temp.createGraph();
+
+    for (int i = 0; i< graph.getNumVertex(); i++){
+        std::cout << graph.getVertexSet()[i]->getInfo() << std::endl;
+    }
     std::cout << "Hello, World!" << std::endl;
     return 0;
 }
