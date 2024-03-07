@@ -4,7 +4,8 @@
 
 #include "Reservoir.h"
 
-Reservoir::Reservoir(std::string name, std::string municipaly, int id, std::string code, long maximum_delivery) : name(name), municipaly(municipaly), id(id), code(code), maximum_delivery(maximum_delivery) {};
+Reservoir::Reservoir(std::string name, std::string municipaly, int id, std::string code, long maximum_delivery) :
+    Element(code), name(name), municipaly(municipaly), id(id), maximum_delivery(maximum_delivery) {};
 
 std::string Reservoir::getName(){
     return this->name;

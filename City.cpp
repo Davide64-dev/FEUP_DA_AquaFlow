@@ -6,7 +6,7 @@
 #include <string>
 
 City::City(std::string name, int id, std::string code, double demand, long population) :
-            name(name), id(id), code(code), demand(demand), population(population) {};
+            Element(code), name(name), id(id), demand(demand), population(population) {};
 
 
 std::string City::getName(){

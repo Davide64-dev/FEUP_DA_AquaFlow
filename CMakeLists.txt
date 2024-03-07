@@ -8,4 +8,9 @@ add_executable(DA_proj1 main.cpp
         City.cpp
         City.h
         Reservoir.cpp
-        Reservoir.h)
+        Reservoir.h
+        Station.cpp
+        Station.h
+        Element.h
+        GraphConstructor.cpp
+        GraphConstructor.h)

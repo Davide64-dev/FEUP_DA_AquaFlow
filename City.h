@@ -6,13 +6,13 @@
 #define DA_PROJ1_CITY_H
 
 #include <string>
+#include "Element.h"
 
-class City {
+class City : public Element{
 
 private:
     std::string name;
     int id;
-    std::string code;
     double demand;
     long population;
 public:

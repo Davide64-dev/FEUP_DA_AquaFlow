@@ -358,7 +358,7 @@ std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 template <class T>
 Vertex<T> * Graph<T>::findVertex(const T &in) const {
     for (auto v : vertexSet)
-        if (v->getInfo() == in)
+        if (static_cast<const T>(v->getInfo()) == in)
             return v;
     return nullptr;
 }

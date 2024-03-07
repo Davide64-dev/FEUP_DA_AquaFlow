@@ -6,13 +6,13 @@
 #define DA_PROJ1_RESERVOIR_H
 
 #include <string>
+#include "Element.h"
 
-class Reservoir {
+class Reservoir : public Element{
 private:
     std::string name;
     std::string municipaly;
     int id;
-    std::string code;
     long maximum_delivery;
 
 public:
