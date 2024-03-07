@@ -8,6 +8,8 @@
 #include <sstream>
 #include <algorithm>
 #include <fstream>
+#include <unordered_map>
+
 
 GraphConstructor::GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile) :
     citiesFile(citiesFile), reservoirsFile(reservoirsFile), stationsFile(stationsFile), pipesFile(pipesFile) {};
@@ -89,3 +91,50 @@ Graph<std::string> GraphConstructor::createGraph(){
 
     return res;
 }
+
+/*
+
+std::unordered_map<std::string, City> GraphConstructor::getCityMap() {
+    std::unordered_map<std::string, City> cityMap;
+    std::string line;
+
+    std::ifstream inCities(citiesFile);
+    getline(inCities, line); // for jumping header
+    while(getline(inCities, line)){
+        City city = parseCity(line);
+        cityMap[city.getCode()] = city;
+    }
+
+    return cityMap;
+}
+
+
+std::unordered_map<std::string, Reservoir> GraphConstructor::getReservoirMap() {
+    std::unordered_map<std::string, Reservoir> reservoirMap;
+    std::string line;
+
+    std::ifstream inReservoir(reservoirsFile);
+    getline(inReservoir, line); // for jumping header
+    while(getline(inReservoir, line)){
+        Reservoir reservoir = parseReservoir(line);
+        reservoirMap[reservoir.getCode()] = reservoir;
+    }
+
+    return reservoirMap;
+}
+
+std::unordered_map<std::string, Station> GraphConstructor::getStationMap() {
+    std::unordered_map<std::string, Station> stationMap;
+    std::string line;
+
+    std::ifstream inStations(stationsFile);
+    getline(inStations, line); // for jumping headers
+    while(getline(inStations, line)){
+        Station station = parseStation(line);
+        stationMap[station.getCode()] = station;
+    }
+
+    return stationMap;
+}
+ */
+

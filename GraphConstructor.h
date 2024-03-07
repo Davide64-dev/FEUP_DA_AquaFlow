@@ -28,6 +28,9 @@ private:
 public:
     GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile);
     Graph<std::string> createGraph();
+    std::unordered_map<std::string, City> getCityMap();
+    std::unordered_map<std::string, Reservoir> getReservoirMap();
+    std::unordered_map<std::string, Station> getStationMap();
 
 };
 
