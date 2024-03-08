@@ -13,4 +13,6 @@ add_executable(DA_proj1 main.cpp
         Station.h
         Element.h
         GraphConstructor.cpp
-        GraphConstructor.h)
+        GraphConstructor.h
+        Manager.cpp
+        Manager.h)

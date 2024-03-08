@@ -3,17 +3,18 @@
 #include "data_structures/graph.h"
 #include "City.h"
 #include "GraphConstructor.h"
+#include "Manager.h"
 
 int main() {
 
-    GraphConstructor temp = GraphConstructor("../LargeDataSet/Cities.csv", "../LargeDataSet/Reservoir.csv", "../LargeDataSet/Stations.csv", "");
+    Manager manager = Manager();
 
+    for (int i = 0; i< manager.network.getNumVertex(); i++){
 
-    Graph<std::string> graph = temp.createGraph();
-
-    for (int i = 0; i< graph.getNumVertex(); i++){
-        std::cout << graph.getVertexSet()[i]->getInfo() << std::endl;
+        if(manager.network.getVertexSet()[i]->getInfo()[0] == 'P')
+            std::cout << manager.network.getVertexSet()[i]->getInfo() << std::endl;
     }
-    std::cout << "Hello, World!" << std::endl;
+
     return 0;
+
 }

@@ -92,17 +92,17 @@ Graph<std::string> GraphConstructor::createGraph(){
     return res;
 }
 
-/*
+
 
 std::unordered_map<std::string, City> GraphConstructor::getCityMap() {
-    std::unordered_map<std::string, City> cityMap;
+    std::unordered_map<std::string, City> cityMap = std::unordered_map<std::string, City>();
     std::string line;
 
     std::ifstream inCities(citiesFile);
     getline(inCities, line); // for jumping header
     while(getline(inCities, line)){
         City city = parseCity(line);
-        cityMap[city.getCode()] = city;
+        cityMap.insert(std::make_pair(city.getCode(), city));
     }
 
     return cityMap;
@@ -117,11 +117,12 @@ std::unordered_map<std::string, Reservoir> GraphConstructor::getReservoirMap() {
     getline(inReservoir, line); // for jumping header
     while(getline(inReservoir, line)){
         Reservoir reservoir = parseReservoir(line);
-        reservoirMap[reservoir.getCode()] = reservoir;
+        reservoirMap.insert(std::make_pair(reservoir.getCode(), reservoir));
     }
 
     return reservoirMap;
 }
+
 
 std::unordered_map<std::string, Station> GraphConstructor::getStationMap() {
     std::unordered_map<std::string, Station> stationMap;
@@ -131,10 +132,10 @@ std::unordered_map<std::string, Station> GraphConstructor::getStationMap() {
     getline(inStations, line); // for jumping headers
     while(getline(inStations, line)){
         Station station = parseStation(line);
-        stationMap[station.getCode()] = station;
+        stationMap.insert(std::make_pair(station.getCode(), station));
     }
 
     return stationMap;
 }
- */
+
 
