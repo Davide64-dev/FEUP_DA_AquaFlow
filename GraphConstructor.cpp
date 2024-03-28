@@ -63,6 +63,21 @@ Station GraphConstructor::parseStation(std::string line) {
 
 }
 
+
+void GraphConstructor::parsePipe(std::string line, std::string& sourc, std::string& dest, double& weight, int& direction) {
+    std::vector<std::string> lineParsed;
+    std::string word;
+    std::istringstream iss(line);
+    while(getline(iss, word, ',')){
+        lineParsed.push_back(word);
+    }
+
+    sourc = lineParsed[0];
+    dest = lineParsed[1];
+    weight = std::stod(lineParsed[2]);
+    direction = std::stoi(lineParsed[3]);
+}
+
 Graph<std::string> GraphConstructor::createGraph(){
     Graph<std::string> res = Graph<std::string>();
     std::string line;
@@ -87,6 +102,22 @@ Graph<std::string> GraphConstructor::createGraph(){
     while(getline(inStations, line)){
         Station station = parseStation(line);
         res.addVertex(station.getCode());
+    }
+
+    std::ifstream inPipes(pipesFile);
+    getline(inPipes, line); // for jumping headers
+    while(getline(inPipes, line)){
+        std::string source, dest;
+        double weight;
+        int direction;
+        parsePipe(line, source, dest, weight, direction);
+        std::cout << "Added edge " << source << ", " << dest << ", " << weight << std::endl;
+        if (direction){
+            if (!res.addEdge(source, dest, weight)) std::cout << "Error Creating the graph\n";
+        }
+        else{
+            if (!res.addBidirectionalEdge(source, dest, weight)) std::cout << "Error Creating the graph\n";
+        }
     }
 
     return res;

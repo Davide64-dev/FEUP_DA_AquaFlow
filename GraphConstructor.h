@@ -31,6 +31,7 @@ public:
     std::unordered_map<std::string, City> getCityMap();
     std::unordered_map<std::string, Reservoir> getReservoirMap();
     std::unordered_map<std::string, Station> getStationMap();
+    void parsePipe(std::string line, std::string& sourc, std::string& dest, double& weight, int& direction);
 
 };
 

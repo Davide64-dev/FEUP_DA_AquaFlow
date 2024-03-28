@@ -8,7 +8,7 @@ Manager::Manager(std::string name) : name(name){
     GraphConstructor constructor = GraphConstructor("../LargeDataSet/Cities.csv",
                                                   "../LargeDataSet/Reservoir.csv",
                                                   "../LargeDataSet/Stations.csv",
-                                                  "");
+                                                  "../LargeDataSet/Pipes.csv");
     this->network = constructor.createGraph();
 
     this->cities = constructor.getCityMap();

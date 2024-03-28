@@ -13,6 +13,7 @@ int main() {
 
         if(manager.network.getVertexSet()[i]->getInfo()[0] == 'P')
             std::cout << manager.network.getVertexSet()[i]->getInfo() << std::endl;
+
     }
 
     return 0;
