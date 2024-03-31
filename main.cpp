@@ -4,6 +4,7 @@
 #include "City.h"
 #include "GraphConstructor.h"
 #include "Manager.h"
+#include "Algorithms.h"
 
 void printIntro(){
     std::cout << "+-----------------------------------+\n";
@@ -25,9 +26,9 @@ int main() {
     }
 */
 
-    // Create a menu to choose what option to do
     printIntro();
 
+    // MENU
     int option = -1;
     while (option != 0) {
 
@@ -43,23 +44,7 @@ int main() {
                 break;
 
             case 1:
-                std::cout << "Maximum amount of water that can reach..." << std::endl;
-                std::cout << "1 - Each city" << std::endl;
-                std::cout << "2 - A specific city" << std::endl;
-                std::cout << "\nChoose an option:";
-                std::cin >> option;
-
-                switch (option) {
-                    case 1:
-                        std::cout << "Each city" << std::endl;
-                        break;
-                    case 2:
-                        std::cout << "A specific city" << std::endl;
-                        break;
-                    default:
-                        break;
-                }
-
+                t21(manager.network);
                 break;
 
             default:

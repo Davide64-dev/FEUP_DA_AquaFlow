@@ -15,4 +15,6 @@ add_executable(DA_proj1 main.cpp
         GraphConstructor.cpp
         GraphConstructor.h
         Manager.cpp
-        Manager.h)
+        Manager.h
+        Algorithms.h
+        Algorithms.cpp)
