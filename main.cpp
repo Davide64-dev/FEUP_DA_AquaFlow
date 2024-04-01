@@ -1,8 +1,6 @@
 #include <iostream>
 #include <filesystem>
-#include "data_structures/graph.h"
 #include "City.h"
-#include "GraphConstructor.h"
 #include "Manager.h"
 #include "Algorithms.h"
 
@@ -44,7 +42,7 @@ int main() {
                 break;
 
             case 1:
-                t21(manager.network);
+                t21(manager);
                 break;
 
             default:

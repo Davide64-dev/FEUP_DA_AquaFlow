@@ -5,7 +5,7 @@
 #ifndef DA_PROJ1_GRAPHCONSTRUCTOR_H
 #define DA_PROJ1_GRAPHCONSTRUCTOR_H
 
-#include "data_structures/graph.h"
+#include "data_structures/Graph.h"
 #include "Element.h"
 #include "City.h"
 #include "Station.h"

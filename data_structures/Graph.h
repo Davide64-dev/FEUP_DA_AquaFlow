@@ -54,7 +54,6 @@ protected:
     unsigned int indegree; // used by topsort
     double dist = 0;
     Edge<T> *path = nullptr;
-
     std::vector<Edge<T> *> incoming; // incoming edges
 
     int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
@@ -512,7 +511,7 @@ void Graph<T>::dfsVisit(Vertex<T> *v, std::vector<T> & res) const {
  */
 template <class T>
 std::vector<T> Graph<T>::bfs(const T & source) const {
-    std::vector<int> res;
+    std::vector<T> res;
     // Get the source vertex
     auto s = findVertex(source);
     if (s == nullptr) {
@@ -537,6 +536,7 @@ std::vector<T> Graph<T>::bfs(const T & source) const {
             if ( ! w->isVisited()) {
                 q.push(w);
                 w->setVisited(true);
+                w->setPath(v);
             }
         }
     }

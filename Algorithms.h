@@ -6,6 +6,9 @@
 #define DA_PROJ1_ALGORITHMS_H
 
 #include "data_structures/Graph.h"
+#include "Reservoir.h"
+#include "City.h"
+#include "Manager.h"
 #include <unordered_map>
 
 /**
@@ -20,8 +23,7 @@
  * @return True if there is a path from the source to the sink in the residual graph, false otherwise.
  */
 template <class T>
-bool findPathBFS(Graph<T>& graph, std::unordered_map<T, T>& parent, T source, T sink, std::unordered_map<T, std::unordered_map<T, int>>& residual);
-
+bool findAugmentingPath(Graph<T>& graph, T source, T sink);
 /**
  * @brief Implements the Edmonds-Karp algorithm to find the maximum flow from the source to the sink in a flow network.
  *
@@ -32,7 +34,7 @@ bool findPathBFS(Graph<T>& graph, std::unordered_map<T, T>& parent, T source, T 
  * @return The maximum flow from the source to the sink.
  */
 template <class T>
-int edmondsKarp(Graph<T>& graph, T source, T sink);
+int edmondsKarp(Graph<T>& graph, std::unordered_map<std::string, Reservoir>& reservoirs, std::unordered_map<std::string, City>& cities);
 
 /**
  * @brief Executes the T2.1 problem.
@@ -41,7 +43,6 @@ int edmondsKarp(Graph<T>& graph, T source, T sink);
  *
  * @param graph The graph network.
  */
-template <class T>
-void t21(Graph<T>& graph);
+void t21(Manager manager);
 
 #endif //DA_PROJ1_ALGORITHMS_H
