@@ -42,6 +42,8 @@ public:
     Edge<T> * addEdge(Vertex<T> *dest, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
+    void setMaxIncoming(double newMaxIncoming);
+    double getMaxIncoming();
 
     friend class MutablePriorityQueue<Vertex>;
 protected:
@@ -59,6 +61,7 @@ protected:
     int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
 
     void deleteEdge(Edge<T> *edge);
+    double maxIncoming;
 };
 
 /********************** Edge  ****************************/
@@ -183,6 +186,16 @@ bool Vertex<T>::removeEdge(T in) {
         }
     }
     return removedEdge;
+}
+
+template <class T>
+void Vertex<T>::setMaxIncoming(double newMaxIncoming){
+    maxIncoming = newMaxIncoming;
+}
+
+template<class T>
+double Vertex<T>::getMaxIncoming(){
+    return maxIncoming;
 }
 
 /*

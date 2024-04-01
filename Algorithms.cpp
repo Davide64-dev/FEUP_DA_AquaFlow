@@ -24,17 +24,21 @@ bool findAugmentingPath(Graph<T>& graph, T source, T sink){
         auto currentVertex = graph.findVertex(current);
         currentVertex->setVisited(true);
         for (int i = 0; i < currentVertex->getAdj().size(); i++){
-            if (currentVertex->getAdj()[i]->getWeight() - currentVertex->getAdj()[i]->getFlow() > 0 && !currentVertex->getAdj()[i]->getDest()->isVisited()){
-                currentVertex->setPath(currentVertex->getAdj()[i]);
-                q.push(currentVertex->getAdj()[i]->getDest()->getInfo());
+            auto nextVertex = currentVertex->getAdj()[i];
+            if (nextVertex->getWeight() - nextVertex->getFlow() > 0 && !nextVertex->getDest()->isVisited()){
+                nextVertex->getDest()->setPath(nextVertex);
+                q.push(nextVertex->getDest()->getInfo());
             }
         }
+
         for (int i = 0; i < currentVertex->getIncoming().size(); i++){
-            if (currentVertex->getIncoming()[i]->getFlow() > 0 && !currentVertex->getAdj()[i]->getDest()->isVisited()){
-                currentVertex->setPath(currentVertex->getAdj()[i]);
-                q.push(currentVertex->getIncoming()[i]->getOrig()->getInfo());
+            auto nextVertex = currentVertex->getIncoming()[i];
+            if (nextVertex->getFlow() > 0 && !nextVertex->getDest()->isVisited()){
+                nextVertex->getDest()->setPath(nextVertex);
+                q.push(nextVertex->getOrig()->getInfo());
             }
         }
+
     }
 
     return graph.findVertex(sink)->isVisited();
@@ -75,27 +79,40 @@ int edmondsKarp(Graph<T>& graph, std::unordered_map<std::string, Reservoir>& res
     int max_flow = 0;
 
     while (findAugmentingPath(graph, supersource, supersink)) {
-        std::cout << "Path found!" << std::endl;
-        /*
-        for (T v = supersink; v != supersource; v = parent[v]) {
-            std::cout << "In first for cycle" << std::endl;
-            T u = parent[v];
-            path_flow = std::min(path_flow, residual[u][v]);
+        //std::cout << "Path found!" << std::endl;
+        int min = INT_MAX;
+
+        T v = supersink;
+
+        while (v != supersource){
+            //std::cout << v << std::endl;
+
+            auto currentVertex = graph.findVertex(v);
+
+            if (currentVertex->getPath()->getWeight() < min) min = currentVertex->getPath()->getWeight();
+            v = graph.findVertex(v)->getPath()->getOrig()->getInfo();
         }
 
-        for (T v = supersink; v != supersource; v = parent[v]) {
-            std::cout << "In second for cycle" << std::endl;
-            T u = parent[v];
-            residual[u][v] -= path_flow;
-            residual[v][u] += path_flow;
-        }
-         */
+        v = supersink;
 
-        //max_flow += path_flow;
-        std::cout << "Max flow: " << max_flow << std::endl;
+        while (v != supersource){
+            auto currentVertex = graph.findVertex(v);
+
+            currentVertex->getPath()->setFlow(currentVertex->getPath()->getFlow() + min);
+
+            v = graph.findVertex(v)->getPath()->getOrig()->getInfo();
+        }
+
     }
 
-    std::cout << "Max flow: " << max_flow << std::endl;
+    for (int i = 0; i < graph.getVertexSet().size(); i++){
+        double VertexIncoming = 0;
+        for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
+            VertexIncoming += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+        }
+        graph.getVertexSet()[i]->setMaxIncoming(VertexIncoming);
+    }
+
     return max_flow;
 
 }
@@ -115,6 +132,13 @@ void t21(Manager manager){
         case 1:
             std::cout << "Each city" << std::endl;
             edmondsKarp(manager.network, manager.reservoirs, manager.cities);
+            for (int i = 0; i < manager.network.getNumVertex(); i++){
+                if (manager.network.getVertexSet()[i]->getInfo()[0] == 'C') {
+                    std::cout << manager.network.getVertexSet()[i]->getInfo();
+                    std::cout << " -> ";
+                    std::cout << manager.network.getVertexSet()[i]->getMaxIncoming() << std::endl;
+                }
+            }
             break;
         case 2:
             std::cout << "A specific city" << std::endl;
