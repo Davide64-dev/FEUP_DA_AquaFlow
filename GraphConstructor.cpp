@@ -26,7 +26,8 @@ City GraphConstructor::parseCity(std::string line) {
     int cityId = std::stoi(lineParsed[1]);
     std::string cityCode = lineParsed[2];
     float cityDemand = std::stof(lineParsed[3]);
-    long cityPopulation = std::stol(lineParsed[4]);
+    //long cityPopulation = std::stol(lineParsed[4]);
+    long cityPopulation = 0;
 
     return City(cityName, cityId, cityCode, cityDemand, cityPopulation);
 }
@@ -57,7 +58,12 @@ Station GraphConstructor::parseStation(std::string line) {
     }
 
     int stationId = std::stoi(lineParsed[0]);
-    std::string stationCode = lineParsed[1].substr(0, lineParsed[1].size()-1);
+    std::string stationCode;
+    if (lineParsed[1][lineParsed[1].size() - 1] == '\r')
+        stationCode = lineParsed[1].substr(0, lineParsed[1].size()-1);
+
+    else stationCode = lineParsed[1];
+
 
     return Station(stationCode, stationId);
 
