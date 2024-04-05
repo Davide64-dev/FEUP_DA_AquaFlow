@@ -123,3 +123,25 @@ void Manager::edmondsKarpAllToAll(Graph<std::string>* res){
 
     *res = graph;
 }
+
+void Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code){
+
+    Graph<std::string> graph = constructor.createGraph();
+
+    graph.addVertex("supersource");
+
+    for (int i = 0; i < graph.getNumVertex(); i++) {
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'R')
+            graph.addEdge("supersource", graph.getVertexSet()[i]->getInfo(),
+                          reservoirs.at(graph.getVertexSet()[i]->getInfo()).getMaximumDelivery());
+    }
+
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++)
+            graph.getVertexSet()[i]->getAdj()[j]->setFlow(0);
+    }
+
+    edmondsKarp(&graph, "supersource", city_code);
+
+    *res = graph;
+}

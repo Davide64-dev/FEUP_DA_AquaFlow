@@ -28,7 +28,7 @@ void t21(Manager manager){
             manager.edmondsKarpAllToAll(&graph);
             for (int i = 0; i < graph.getNumVertex(); i++){
                 if (graph.getVertexSet()[i]->getInfo()[0] == 'C') {
-                    std::cout << graph.getVertexSet()[i]->getInfo();
+                    std::cout << manager.cities.at(graph.getVertexSet()[i]->getInfo()).getName() << " | " <<graph.getVertexSet()[i]->getInfo();
                     std::cout << " -> ";
                     int temp = 0;
                     for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
@@ -38,7 +38,7 @@ void t21(Manager manager){
                     std::cout << temp << std::endl;
                 }
             }
-            std::cout << "Max flow: " << maxflow << std::endl;
+            std::cout << "The total Max Flow is: " << maxflow << std::endl;
             break;
         case 2:
             std::cout << "A specific city" << std::endl;

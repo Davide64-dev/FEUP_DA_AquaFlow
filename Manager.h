@@ -35,6 +35,8 @@ public:
     void edmondsKarp(Graph<std::string> *g, std::string source, std::string target);
 
     void edmondsKarpAllToAll(Graph<std::string>* res);
+
+    void edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code);
 };
 
 
