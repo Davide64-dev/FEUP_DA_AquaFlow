@@ -19,6 +19,7 @@ public:
 
     void mainMenu();
     void t21();
+    void t22();
 };
 
 

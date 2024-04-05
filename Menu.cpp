@@ -21,6 +21,7 @@ void Menu::mainMenu() {
         std::cout << "\t:::: MENU ::::" << std::endl;
         std::cout << "0 - Exit" << std::endl;
         std::cout << "1 - T2.1 - Maximum amount of water that can reach each or a specific city" << std::endl;
+        std::cout << "2 - T2.2 - Water Demand vs. Actual Flow" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -31,6 +32,10 @@ void Menu::mainMenu() {
 
             case 1:
                 t21();
+                break;
+
+            case 2:
+                t22();
                 break;
 
             default:
@@ -88,6 +93,27 @@ void Menu::t21(){
         default:
             std::cout << "Invalid option" << std::endl;
             break;
+    }
+}
+
+void Menu::t22(){
+    Graph<std::string> graph;
+    manager.edmondsKarpAllToAll(&graph);
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        std::string city_name = graph.getVertexSet()[i]->getInfo();
+        if (city_name[0] != 'C') continue;
+        double demand = manager.cities.at(city_name).getDemand();
+        double actual = 0;
+        for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
+            actual += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+        }
+
+        if (demand > actual){
+            std::cout << city_name << " | Demand: " << demand << std::endl;
+            std::cout << city_name << " | Delivered: " << actual <<  std::endl;
+            std::cout << city_name << " | Difference: " << demand - actual << std::endl;
+        }
+
     }
 }
 

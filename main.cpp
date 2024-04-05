@@ -1,6 +1,3 @@
-#include <iostream>
-#include <filesystem>
-#include "data_structures/City.h"
 #include "Manager.h"
 #include "Menu.h"
 
