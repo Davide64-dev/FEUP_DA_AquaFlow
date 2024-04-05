@@ -93,7 +93,7 @@ void Manager::edmondsKarp(Graph<std::string> *g, std::string source, std::string
     }
 }
 
-void Manager::edmondsKarpAllToAll(Graph<std::string>* res){
+double Manager::edmondsKarpAllToAll(Graph<std::string>* res){
 
     Graph<std::string> graph = constructor.createGraph();
 
@@ -122,9 +122,20 @@ void Manager::edmondsKarpAllToAll(Graph<std::string>* res){
     edmondsKarp(&graph, "supersource", "supersink");
 
     *res = graph;
+
+    int maxflow = 0;
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'C') {
+            for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
+                maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+            }
+        }
+    }
+
+    return maxflow;
 }
 
-void Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code){
+double Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code){
 
     Graph<std::string> graph = constructor.createGraph();
 
@@ -144,4 +155,15 @@ void Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code
     edmondsKarp(&graph, "supersource", city_code);
 
     *res = graph;
+
+    long maxflow = 0;
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        if (graph.getVertexSet()[i]->getInfo() == city_code) {
+            for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
+                maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+            }
+        }
+    }
+
+    return maxflow;
 }

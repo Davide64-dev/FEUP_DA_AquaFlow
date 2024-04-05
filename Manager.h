@@ -8,10 +8,10 @@
 #include <string>
 #include "data_structures/Graph.h"
 #include <unordered_map>
-#include "City.h"
-#include "Reservoir.h"
-#include "Station.h"
-#include "GraphConstructor.h"
+#include "data_structures/City.h"
+#include "data_structures/Reservoir.h"
+#include "data_structures/Station.h"
+#include "data_structures/GraphConstructor.h"
 
 class Manager {
 private:
@@ -34,9 +34,9 @@ public:
 
     void edmondsKarp(Graph<std::string> *g, std::string source, std::string target);
 
-    void edmondsKarpAllToAll(Graph<std::string>* res);
+    double edmondsKarpAllToAll(Graph<std::string>* res);
 
-    void edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code);
+    double edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code);
 };
 
 
