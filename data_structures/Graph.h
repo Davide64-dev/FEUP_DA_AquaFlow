@@ -43,7 +43,11 @@ public:
     bool removeEdge(T in);
     void removeOutgoingEdges();
     void setMaxIncoming(double newMaxIncoming);
+
     double getMaxIncoming();
+    void enable ();
+    void disable ();
+    bool isActiveted();
 
     friend class MutablePriorityQueue<Vertex>;
 protected:
@@ -59,6 +63,8 @@ protected:
     std::vector<Edge<T> *> incoming; // incoming edges
 
     int queueIndex = 0; 		// required by MutablePriorityQueue and UFDS
+
+    bool isActive = true;
 
     void deleteEdge(Edge<T> *edge);
     double maxIncoming;
@@ -162,6 +168,21 @@ Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
     return newEdge;
+}
+
+template <class T>
+void Vertex<T>::enable (){
+    this->isActive = true;
+}
+
+template <class T>
+void Vertex<T>::disable (){
+    this->isActive = false;
+}
+
+template <class T>
+bool Vertex<T>::isActiveted(){
+    return isActive;
 }
 
 /*

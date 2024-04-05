@@ -22,6 +22,8 @@ void Menu::mainMenu() {
         std::cout << "0 - Exit" << std::endl;
         std::cout << "1 - T2.1 - Maximum amount of water that can reach each or a specific city" << std::endl;
         std::cout << "2 - T2.2 - Water Demand vs. Actual Flow" << std::endl;
+        std::cout << "3 - T3.1 - Water Reservoir Out of Comission Test" << std::endl;
+        std::cout << "4 - T3.2 - Pumping Station out of Comission Test" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -37,6 +39,13 @@ void Menu::mainMenu() {
             case 2:
                 t22();
                 break;
+
+            case 3:
+                t31();
+                break;
+
+            case 4:
+                t32();
 
             default:
                 std::cout << "Invalid option" << std::endl;
@@ -115,6 +124,46 @@ void Menu::t22(){
         }
 
     }
+}
+
+void Menu::t31(){
+    std::unordered_map<std::string, std::pair<int, int>> res;
+    std::string node;
+    std::cout << "Insert Reservoir Code: ";
+    std::cin >> node;
+    if (node[0] != 'R'){
+        std::cout << "Invalid Reservoir Name\n";
+        return;
+    }
+    manager.checkRemovedNode(node, res);
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
+}
+
+void Menu::t32(){
+
+    std::unordered_map<std::string, std::pair<int, int>> res;
+    std::string node;
+    std::cout << "Insert Pumping Station Code: ";
+    std::cin >> node;
+    if (node[0] != 'P'){
+        std::cout << "Invalid Pumping Station Name\n";
+        return;
+    }
+    manager.checkRemovedNode(node, res);
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
+
 }
 
 void Menu::start(){

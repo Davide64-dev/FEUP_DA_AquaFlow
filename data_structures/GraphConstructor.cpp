@@ -117,7 +117,7 @@ Graph<std::string> GraphConstructor::createGraph(){
         double weight;
         int direction;
         parsePipe(line, source, dest, weight, direction);
-        std::cout << "Added edge " << source << ", " << dest << ", " << weight << std::endl;
+        //std::cout << "Added edge " << source << ", " << dest << ", " << weight << std::endl;
         if (direction){
             if (!res.addEdge(source, dest, weight)) std::cout << "Error Creating the graph\n";
         }

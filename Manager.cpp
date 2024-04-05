@@ -32,8 +32,10 @@ bool Manager::findAugmentingPath(Graph<std::string> *g, Vertex<std::string> *s, 
     // Mark the source vertex as visited and enqueue it
     s->setVisited(true); std::queue<Vertex<std::string> *> q; q.push(s);
     // BFS to find an augmenting path
-    while( ! q.empty() && ! t->isVisited()) { auto v = q.front();
+    while( ! q.empty() && ! t->isVisited()) {
+        auto v = q.front();
         q.pop();
+        if (!v->isActiveted()) continue;
         // Process outgoing edges
         for(auto e: v->getAdj()) {
             testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
@@ -103,6 +105,8 @@ double Manager::edmondsKarpAllToAll(Graph<std::string>* res){
         if (graph.getVertexSet()[i]->getInfo()[0] == 'R')
             graph.addEdge("supersource", graph.getVertexSet()[i]->getInfo(),
                                        reservoirs.at(graph.getVertexSet()[i]->getInfo()).getMaximumDelivery());
+
+        graph.getVertexSet()[i]->enable();
     }
 
 
@@ -135,6 +139,52 @@ double Manager::edmondsKarpAllToAll(Graph<std::string>* res){
     return maxflow;
 }
 
+double Manager::edmondsKarpWithoutNode(Graph<std::string>* res, std::string deactivated){
+
+    Graph<std::string> graph = constructor.createGraph();
+
+    graph.addVertex("supersource");
+
+    for (int i = 0; i < graph.getNumVertex(); i++) {
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'R')
+            graph.addEdge("supersource", graph.getVertexSet()[i]->getInfo(),
+                          reservoirs.at(graph.getVertexSet()[i]->getInfo()).getMaximumDelivery());
+
+        graph.getVertexSet()[i]->enable();
+    }
+
+
+    graph.addVertex("supersink");
+
+    for (int i = 0; i < graph.getNumVertex(); i++) {
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'C')
+            graph.addEdge(graph.getVertexSet()[i]->getInfo(), "supersink",
+                          cities.at(graph.getVertexSet()[i]->getInfo()).getDemand());
+    }
+
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++)
+            graph.getVertexSet()[i]->getAdj()[j]->setFlow(0);
+    }
+
+    graph.findVertex(deactivated)->disable();
+
+    edmondsKarp(&graph, "supersource", "supersink");
+
+    *res = graph;
+
+    int maxflow = 0;
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'C') {
+            for (int j = 0; j < graph.getVertexSet()[i]->getIncoming().size(); j++){
+                maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+            }
+        }
+    }
+
+    return maxflow;
+}
+
 double Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code){
 
     Graph<std::string> graph = constructor.createGraph();
@@ -145,6 +195,8 @@ double Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_co
         if (graph.getVertexSet()[i]->getInfo()[0] == 'R')
             graph.addEdge("supersource", graph.getVertexSet()[i]->getInfo(),
                           reservoirs.at(graph.getVertexSet()[i]->getInfo()).getMaximumDelivery());
+
+        graph.getVertexSet()[i]->enable();
     }
 
     for (int i = 0; i < graph.getNumVertex(); i++){
@@ -166,4 +218,58 @@ double Manager::edmondsKarpAllToOne(Graph<std::string>* res, std::string city_co
     }
 
     return maxflow;
+}
+
+void Manager::checkRemovedNode(std::string node, std::unordered_map<std::string, std::pair<int,int>>& diff){
+    std::unordered_map<std::string, std::pair<int, int>> res;
+
+    Graph<std::string> graph = constructor.createGraph();
+
+    graph.addVertex("supersource");
+
+    for (int i = 0; i < graph.getNumVertex(); i++) {
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'R')
+            graph.addEdge("supersource", graph.getVertexSet()[i]->getInfo(),
+                          reservoirs.at(graph.getVertexSet()[i]->getInfo()).getMaximumDelivery());
+    }
+
+
+    graph.addVertex("supersink");
+
+    for (int i = 0; i < graph.getNumVertex(); i++) {
+        if (graph.getVertexSet()[i]->getInfo()[0] == 'C')
+            graph.addEdge(graph.getVertexSet()[i]->getInfo(), "supersink",
+                          cities.at(graph.getVertexSet()[i]->getInfo()).getDemand());
+    }
+
+    edmondsKarp(&graph, "supersource", "supersink");
+
+
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        std::string code = graph.getVertexSet()[i]->getInfo();
+        if (code[0] != 'C') continue;
+
+        auto vertex = graph.findVertex(code);
+        int maxflow = 0;
+        for (int j = 0; j < vertex->getIncoming().size(); j++){
+            maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+        }
+        res[code].first = maxflow;
+    }
+
+    edmondsKarpWithoutNode(&graph, node);
+
+    for (int i = 0; i < graph.getNumVertex(); i++){
+        std::string code = graph.getVertexSet()[i]->getInfo();
+        if (code[0] != 'C') continue;
+
+        auto vertex = graph.findVertex(code);
+        int maxflow = 0;
+        for (int j = 0; j < vertex->getIncoming().size(); j++){
+            maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+        }
+        res[code].second = maxflow;
+    }
+    diff = res;
+
 }
