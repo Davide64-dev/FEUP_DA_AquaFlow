@@ -87,6 +87,12 @@ public:
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
+    void enable ();
+    void disable ();
+    bool isActivated();
+
+    void setWeight (double newWeight);
+
 protected:
     Vertex<T> * dest; // destination vertex
     double weight; // edge weight, can also be used for capacity
@@ -97,6 +103,7 @@ protected:
     // used for bidirectional edges
     Vertex<T> *orig;
     Edge<T> *reverse = nullptr;
+    bool isActive = true;
 
     double flow; // for flow-related problems
 };
@@ -356,6 +363,26 @@ bool Edge<T>::isSelected() const {
 template <class T>
 double Edge<T>::getFlow() const {
     return flow;
+}
+
+template <class T>
+void Edge<T>::enable (){
+    isActive = true;
+}
+
+template <class T>
+void Edge<T>::disable (){
+    isActive = false;
+}
+
+template <class T>
+bool Edge<T>::isActivated (){
+    return isActive;
+}
+
+template <class T>
+void Edge<T>::setWeight (double newWeight){
+    weight = newWeight;
 }
 
 template <class T>

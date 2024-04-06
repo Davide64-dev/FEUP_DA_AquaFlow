@@ -22,6 +22,9 @@ public:
     void t22();
     void t31();
     void t32();
+    void t33();
+
+    void printCitiesDifferences(std::unordered_map<std::string, std::pair<int, int>>& res);
 };
 
 

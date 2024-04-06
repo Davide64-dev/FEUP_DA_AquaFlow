@@ -36,11 +36,16 @@ public:
 
     double edmondsKarpAllToAll(Graph<std::string>* res);
 
-    double edmondsKarpAllToOne(Graph<std::string>* res, std::string city_code);
 
     void checkRemovedNode(std::string node, std::unordered_map<std::string, std::pair<int,int>>& diff);
 
     double edmondsKarpWithoutNode(Graph<std::string>* res, std::string deactivated);
+
+    double edmondsKarpWithoutEdge(Graph<std::string>* res, std::string orig, std::string dest);
+
+    void checkRemovedPipe(std::string orig, std::string dest, std::unordered_map<std::string, std::pair<int,int>>& diff);
+
+    void addSupersourceAndSuperSink(Graph<std::string>& graph);
 };
 
 

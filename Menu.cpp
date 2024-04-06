@@ -24,6 +24,7 @@ void Menu::mainMenu() {
         std::cout << "2 - T2.2 - Water Demand vs. Actual Flow" << std::endl;
         std::cout << "3 - T3.1 - Water Reservoir Out of Comission Test" << std::endl;
         std::cout << "4 - T3.2 - Pumping Station out of Comission Test" << std::endl;
+        std::cout << "5 - T3.3 - Pipe out of Comission Test" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -46,6 +47,12 @@ void Menu::mainMenu() {
 
             case 4:
                 t32();
+                break;
+
+            case 5:
+                t33();
+                break;
+
 
             default:
                 std::cout << "Invalid option" << std::endl;
@@ -126,6 +133,19 @@ void Menu::t22(){
     }
 }
 
+void Menu::printCitiesDifferences(std::unordered_map<std::string, std::pair<int, int>>& res){
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+
+        if (res[manager.network.getVertexSet()[i]->getInfo()].first == res[manager.network.getVertexSet()[i]->getInfo()].second) continue;
+        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
+
+}
+
 void Menu::t31(){
     std::unordered_map<std::string, std::pair<int, int>> res;
     std::string node;
@@ -137,12 +157,7 @@ void Menu::t31(){
     }
     manager.checkRemovedNode(node, res);
 
-    for (int i = 0; i < manager.network.getNumVertex(); i++){
-        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
-        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
-        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
-        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
-    }
+    printCitiesDifferences(res);
 }
 
 void Menu::t32(){
@@ -157,12 +172,22 @@ void Menu::t32(){
     }
     manager.checkRemovedNode(node, res);
 
-    for (int i = 0; i < manager.network.getNumVertex(); i++){
-        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
-        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
-        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
-        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
-    }
+    printCitiesDifferences(res);
+
+}
+
+void Menu::t33(){
+    std::unordered_map<std::string, std::pair<int, int>> res;
+    std::string orig, dest;
+    std::cout << "Insert Pipe Origin: ";
+    std::cin >> orig;
+
+    std::cout << "Insert Pipe Destiny: ";
+    std::cin >> dest;
+
+    manager.checkRemovedPipe(orig, dest, res);
+
+    printCitiesDifferences(res);
 
 }
 

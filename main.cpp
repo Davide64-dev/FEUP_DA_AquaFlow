@@ -8,4 +8,6 @@ int main() {
     Menu menu = Menu(manager);
 
     menu.start();
+
+    return 0;
 }
