@@ -187,9 +187,6 @@ double Manager::edmondsKarpWithoutEdge(Graph<std::string>* res, std::string orig
         }
     }
 
-    tmp.removeEdge("PS_4", "PS_5");
-    tmp.removeEdge("PS_9", "PS_10");
-
     edmondsKarp(&tmp, "supersource", "supersink");
 
     *res = tmp;
