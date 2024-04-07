@@ -112,7 +112,7 @@ public:
      *  Nodes with unmet demand are identified, and flow redistribution is done based on the excess capacity in pipes.
      * @param graph Pointer to the graph.
      * @par Complexity
-       *   - Time: O(V * E)
+       *   - Time: O(V + E)
        *   - Space: O(V + E)
      */
     void balanceFlow(Graph<std::string>* graph);
