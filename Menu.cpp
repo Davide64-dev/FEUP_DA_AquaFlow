@@ -3,6 +3,7 @@
 //
 
 #include "Menu.h"
+#include <fstream>
 
 Menu::Menu(Manager manager) : manager(manager) {};
 
@@ -72,10 +73,12 @@ void Menu::t21(){
     int maxflow = 0;
     Graph<std::string> graph;
     std::string selectedCity;
+    std::ofstream outputFile("../2_1_edmonds_karp.csv");
     switch (option) {
         case 1:
             std::cout << "Each city" << std::endl;
             manager.edmondsKarpAllToAll(&graph);
+            outputFile << "City,Code,Max Amout of Water\n";
             for (int i = 0; i < graph.getNumVertex(); i++){
                 if (graph.getVertexSet()[i]->getInfo()[0] == 'C') {
                     std::cout << manager.cities.at(graph.getVertexSet()[i]->getInfo()).getName() << " | " <<graph.getVertexSet()[i]->getInfo();
@@ -86,9 +89,12 @@ void Menu::t21(){
                     }
                     maxflow += temp;
                     std::cout << temp << std::endl;
+                    outputFile << manager.cities.at(graph.getVertexSet()[i]->getInfo()).getName() <<
+                        "," << graph.getVertexSet()[i]->getInfo() << "," << temp << '\n';
                 }
             }
             std::cout << "The total Max Flow is: " << maxflow << std::endl;
+            outputFile.close();
             break;
         case 2:
             std::cout << "A specific city - Select Your City: ";
@@ -115,6 +121,8 @@ void Menu::t21(){
 void Menu::t22(){
     Graph<std::string> graph;
     manager.edmondsKarpAllToAll(&graph);
+    std::ofstream outputFile("../2_2_difference.csv");
+    outputFile << "City Code,Value\n";
     for (int i = 0; i < graph.getNumVertex(); i++){
         std::string city_name = graph.getVertexSet()[i]->getInfo();
         if (city_name[0] != 'C') continue;
@@ -129,7 +137,10 @@ void Menu::t22(){
             std::cout << city_name << " | Demand: " << demand << std::endl;
             std::cout << city_name << " | Delivered: " << actual <<  std::endl;
             std::cout << city_name << " | Difference: " << demand - actual << std::endl;
+            outputFile << city_name << "," << demand - actual << '\n';
         }
+
+        outputFile.close();
 
     }
 }
@@ -165,6 +176,20 @@ void Menu::t31(){
     manager.checkRemovedNode(node, res);
 
     printCitiesDifferences(res);
+
+    std::ofstream outputFile("../3_1_Reservoir_" + node + "_OutOfComission.csv");
+    outputFile << "City Code,Before,After\n";
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+
+        if (res[manager.network.getVertexSet()[i]->getInfo()].first == res[manager.network.getVertexSet()[i]->getInfo()].second) continue;
+        outputFile << manager.network.getVertexSet()[i]->getInfo() << "," << res[manager.network.getVertexSet()[i]->getInfo()].first << ",";
+        outputFile << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
+
+    outputFile.close();
+
 }
 
 void Menu::t32(){
@@ -184,6 +209,19 @@ void Menu::t32(){
 
     printCitiesDifferences(res);
 
+    std::ofstream outputFile("../3_2_PumpingStation_" + node + "_OutOfComission.csv");
+    outputFile << "City Code,Before,After\n";
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+
+        if (res[manager.network.getVertexSet()[i]->getInfo()].first == res[manager.network.getVertexSet()[i]->getInfo()].second) continue;
+        outputFile << manager.network.getVertexSet()[i]->getInfo() << "," << res[manager.network.getVertexSet()[i]->getInfo()].first << ",";
+        outputFile << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
+
+    outputFile.close();
+
 }
 
 void Menu::t33(){
@@ -198,6 +236,17 @@ void Menu::t33(){
     manager.checkRemovedPipe(orig, dest, res);
 
     printCitiesDifferences(res);
+
+    std::ofstream outputFile("../3_2_Pipe_" + orig + "To" + dest + "_OutOfComission.csv");
+    outputFile << "City Code,Before,After\n";
+
+    for (int i = 0; i < manager.network.getNumVertex(); i++){
+        if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
+
+        if (res[manager.network.getVertexSet()[i]->getInfo()].first == res[manager.network.getVertexSet()[i]->getInfo()].second) continue;
+        outputFile << manager.network.getVertexSet()[i]->getInfo() << "," << res[manager.network.getVertexSet()[i]->getInfo()].first << ",";
+        outputFile << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
+    }
 
 }
 

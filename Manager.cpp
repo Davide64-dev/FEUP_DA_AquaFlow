@@ -268,9 +268,6 @@ void Manager::checkRemovedPipe(std::string orig, std::string dest, std::unordere
         res[code].first = maxflow;
     }
 
-    graph2.removeEdge(orig, dest);
-    graph2.removeEdge("PS_4", "PS_5");
-    graph2.removeEdge("PS_9", "PS_10");
 
     edmondsKarpWithoutEdge(&graph2, orig, dest);
 
