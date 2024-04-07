@@ -125,6 +125,7 @@ void Menu::t22(){
         }
 
         if (demand > actual){
+            std::cout << "-------- " << manager.cities.at(city_name).getName() << " --------" << std::endl;
             std::cout << city_name << " | Demand: " << demand << std::endl;
             std::cout << city_name << " | Delivered: " << actual <<  std::endl;
             std::cout << city_name << " | Difference: " << demand - actual << std::endl;
@@ -135,12 +136,15 @@ void Menu::t22(){
 
 void Menu::printCitiesDifferences(std::unordered_map<std::string, std::pair<int, int>>& res){
 
+    std::cout <<  "City Code | City Name | Before Removal | After Removal\n";
+
     for (int i = 0; i < manager.network.getNumVertex(); i++){
         if (manager.network.getVertexSet()[i]->getInfo()[0] != 'C') continue;
 
         if (res[manager.network.getVertexSet()[i]->getInfo()].first == res[manager.network.getVertexSet()[i]->getInfo()].second) continue;
-        std::cout << manager.network.getVertexSet()[i]->getInfo() << " ";
-        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " ";
+        std::cout << manager.network.getVertexSet()[i]->getInfo() << " | ";
+        std::cout << manager.cities.at(manager.network.getVertexSet()[i]->getInfo()).getName() << " | ";
+        std::cout << res[manager.network.getVertexSet()[i]->getInfo()].first << " | ";
         std::cout << res[manager.network.getVertexSet()[i]->getInfo()].second << std::endl;
     }
 
@@ -155,6 +159,9 @@ void Menu::t31(){
         std::cout << "Invalid Reservoir Name\n";
         return;
     }
+
+    std::cout << "--------" << manager.reservoirs.at(node).getName() << " Reservoir--------" << std::endl;
+
     manager.checkRemovedNode(node, res);
 
     printCitiesDifferences(res);
@@ -170,6 +177,9 @@ void Menu::t32(){
         std::cout << "Invalid Pumping Station Name\n";
         return;
     }
+
+    std::cout << "--------" << node << " Pumping Station--------" << std::endl;
+
     manager.checkRemovedNode(node, res);
 
     printCitiesDifferences(res);

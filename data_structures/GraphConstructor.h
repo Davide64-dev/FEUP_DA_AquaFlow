@@ -19,6 +19,7 @@ private:
     std::string reservoirsFile;
     std::string stationsFile;
     std::string pipesFile;
+    bool isSmallDataSet;
 
     City parseCity(std::string line);
     Reservoir parseReservoir(std::string line);
@@ -27,7 +28,8 @@ private:
     void addEdges(Graph<Element>& graph);
 
 public:
-    GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile);
+    GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile, bool isSmallDataSet);
+    GraphConstructor();
     Graph<std::string> createGraph();
     std::unordered_map<std::string, City> getCityMap();
     std::unordered_map<std::string, Reservoir> getReservoirMap();

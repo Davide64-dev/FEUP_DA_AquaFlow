@@ -11,8 +11,13 @@
 #include <unordered_map>
 
 
-GraphConstructor::GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile) :
-    citiesFile(citiesFile), reservoirsFile(reservoirsFile), stationsFile(stationsFile), pipesFile(pipesFile) {};
+GraphConstructor::GraphConstructor(std::string citiesFile, std::string reservoirsFile, std::string stationsFile, std::string pipesFile, bool isSmallDataSet) :
+    citiesFile(citiesFile), reservoirsFile(reservoirsFile), stationsFile(stationsFile), pipesFile(pipesFile), isSmallDataSet(isSmallDataSet) {};
+
+GraphConstructor::GraphConstructor() : citiesFile("../Project1DataSetSmall/Cities_Madeira.csv"),
+                                        reservoirsFile("../Project1DataSetSmall/Reservoirs_Madeira.csv"),
+                                        stationsFile("../Project1DataSetSmall/Stations_Madeira.csv"),
+                                        pipesFile("../Project1DataSetSmall/Pipes_Madeira.csv") {};
 
 City GraphConstructor::parseCity(std::string line) {
     std::vector<std::string> lineParsed;
@@ -26,8 +31,17 @@ City GraphConstructor::parseCity(std::string line) {
     int cityId = std::stoi(lineParsed[1]);
     std::string cityCode = lineParsed[2];
     float cityDemand = std::stof(lineParsed[3]);
-    //long cityPopulation = std::stol(lineParsed[4]);
-    long cityPopulation = 0;
+    long cityPopulation;
+    if (isSmallDataSet) {
+        std::string cityPopulationComplete = lineParsed[4] + lineParsed[5];
+        cityPopulationComplete = cityPopulationComplete.substr(1, cityPopulationComplete.size()-2);
+        if (cityPopulationComplete[cityPopulationComplete.size()-1] == '\"')
+            cityPopulationComplete = cityPopulationComplete.substr(0, cityPopulationComplete.size()-1);
+        cityPopulation = std::stol(cityPopulationComplete);
+    }
+    else{
+        cityPopulation = 0;
+    }
 
     return City(cityName, cityId, cityCode, cityDemand, cityPopulation);
 }
@@ -106,6 +120,7 @@ Graph<std::string> GraphConstructor::createGraph(){
     std::ifstream inStations(stationsFile);
     getline(inStations, line); // for jumping headers
     while(getline(inStations, line)){
+        if (line == ",,,") continue;
         Station station = parseStation(line);
         res.addVertex(station.getCode());
     }
@@ -168,6 +183,7 @@ std::unordered_map<std::string, Station> GraphConstructor::getStationMap() {
     std::ifstream inStations(stationsFile);
     getline(inStations, line); // for jumping headers
     while(getline(inStations, line)){
+        if (line == ",,,") continue;
         Station station = parseStation(line);
         stationMap.insert(std::make_pair(station.getCode(), station));
     }

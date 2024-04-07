@@ -4,9 +4,17 @@
 
 #include "Manager.h"
 
-Manager::Manager(std::string name) : name(name), constructor(GraphConstructor("../DataSetSmall/Cities_Madeira.csv",
-                                                                              "../DataSetSmall/Reservoirs_Madeira.csv",
-                                                                              "../DataSetSmall/Stations_Madeira.csv","../DataSetSmall/Pipes_Madeira.csv")){
+
+Manager::Manager(bool isSmallDataSet, std::string name) : name(name){
+
+    if (isSmallDataSet)
+        this->constructor = GraphConstructor("../Project1DataSetSmall/Cities_Madeira.csv",
+                                                                              "../Project1DataSetSmall/Reservoirs_Madeira.csv",
+                                                                              "../Project1DataSetSmall/Stations_Madeira.csv","../Project1DataSetSmall/Pipes_Madeira.csv", isSmallDataSet);
+    else
+        this->constructor = GraphConstructor("../LargeDataSet/Cities.csv", "../LargeDataSet/Reservoir.csv",
+                                             "../LargeDataSet/Stations.csv", "../LargeDataSet/Pipes.csv", isSmallDataSet);
+
     this->network = constructor.createGraph();
 
     this->cities = constructor.getCityMap();
@@ -47,6 +55,9 @@ bool Manager::findAugmentingPath(Graph<std::string> *g, Vertex<std::string> *s, 
         }
         // Process incoming edges
         for(auto e: v->getIncoming()) {
+            if (!e->isActivated()){
+                continue;
+            }
             testAndVisit(q, e, e->getOrig(), e->getFlow());
         } }
     // Return true if a path to the target is found, false otherwise
@@ -58,6 +69,10 @@ double Manager::findMinResidualAlongPath(Vertex<std::string> *s, Vertex<std::str
     // Traverse the augmenting path to find the minimum residual capacity
     for (auto v = t; v != s; ) {
         auto e = v->getPath();
+
+        if (!e->isActivated()){
+            std::cout << "Something really weird" << std::endl;
+        }
         if (e->getDest() == v) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig(); }
@@ -72,6 +87,9 @@ void Manager::augmentFlowAlongPath(Vertex<std::string> *s, Vertex<std::string> *
     // Traverse the augmenting path and update the flow values accordingly
     for (auto v = t; v != s; ) {
         auto e = v->getPath();
+        if (!e->isActivated()){
+            std::cout << "Something really weird" << std::endl;
+        }
         double flow = e->getFlow();
         if (e->getDest() == v) {
             e->setFlow(flow + f);
@@ -92,6 +110,9 @@ void Manager::edmondsKarp(Graph<std::string> *g, std::string source, std::string
     // Initialize flow on all edges to 0
     for (auto v : g->getVertexSet()) {
         for (auto e: v->getAdj()) {
+            if (!e->isActivated()){
+                std::cout << "Edge not activated" << std::endl;
+            }
             e->setFlow(0);
         }
     }
@@ -164,16 +185,10 @@ double Manager::edmondsKarpWithoutEdge(Graph<std::string>* res, std::string orig
                 }
             }
         }
-        if (tmp.getVertexSet()[i]->getInfo() == "PS_4"){
-            for (int j = 0; j < tmp.getVertexSet()[i]->getAdj().size(); j++){
-                if (tmp.getVertexSet()[i]->getAdj()[j]->getDest()->getInfo() == "PS_5"){
-                    tmp.getVertexSet()[i]->getAdj()[j]->disable();
-                    std::cout << "PS_4 to PS_5 disabeled: " << tmp.getVertexSet()[i]->getAdj()[j]->isActivated() << std::endl;
-                }
-            }
-        }
     }
 
+    tmp.removeEdge("PS_4", "PS_5");
+    tmp.removeEdge("PS_9", "PS_10");
 
     edmondsKarp(&tmp, "supersource", "supersink");
 
@@ -235,6 +250,7 @@ void Manager::checkRemovedPipe(std::string orig, std::string dest, std::unordere
     std::unordered_map<std::string, std::pair<int, int>> res;
 
     Graph<std::string> graph = constructor.createGraph();
+    Graph<std::string> graph2 = constructor.createGraph();
 
     addSupersourceAndSuperSink(graph);
 
@@ -252,16 +268,20 @@ void Manager::checkRemovedPipe(std::string orig, std::string dest, std::unordere
         res[code].first = maxflow;
     }
 
-    edmondsKarpWithoutEdge(&graph, orig, dest);
+    graph2.removeEdge(orig, dest);
+    graph2.removeEdge("PS_4", "PS_5");
+    graph2.removeEdge("PS_9", "PS_10");
 
-    for (int i = 0; i < graph.getNumVertex(); i++){
-        std::string code = graph.getVertexSet()[i]->getInfo();
+    edmondsKarpWithoutEdge(&graph2, orig, dest);
+
+    for (int i = 0; i < graph2.getNumVertex(); i++){
+        std::string code = graph2.getVertexSet()[i]->getInfo();
         if (code[0] != 'C') continue;
 
-        auto vertex = graph.findVertex(code);
+        auto vertex = graph2.findVertex(code);
         int maxflow = 0;
         for (int j = 0; j < vertex->getIncoming().size(); j++){
-            maxflow += graph.getVertexSet()[i]->getIncoming()[j]->getFlow();
+            maxflow += graph2.getVertexSet()[i]->getIncoming()[j]->getFlow();
         }
         res[code].second = maxflow;
     }
