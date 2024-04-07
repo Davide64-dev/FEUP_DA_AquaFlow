@@ -140,9 +140,9 @@ void Menu::t22(){
             outputFile << city_name << "," << demand - actual << '\n';
         }
 
-        outputFile.close();
 
     }
+    outputFile.close();
 }
 
 void Menu::printCitiesDifferences(std::unordered_map<std::string, std::pair<int, int>>& res){
