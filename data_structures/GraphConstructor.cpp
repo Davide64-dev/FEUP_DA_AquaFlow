@@ -40,7 +40,7 @@ City GraphConstructor::parseCity(std::string line) {
         cityPopulation = std::stol(cityPopulationComplete);
     }
     else{
-        cityPopulation = 0;
+        cityPopulation = std::stol(lineParsed[4]);
     }
 
     return City(cityName, cityId, cityCode, cityDemand, cityPopulation);
