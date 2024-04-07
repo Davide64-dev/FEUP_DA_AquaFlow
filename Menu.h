@@ -67,6 +67,14 @@ public:
     void t22();
 
     /**
+     * @brief Performs task T2.3.
+     * @par Complexity
+       *   - Time: O(V * E^2)
+       *   - Space: O(V + E)
+     */
+    void t23();
+
+    /**
      * @brief Performs task T3.1.
      * @par Complexity
        *   - Time: O(V * E^2)

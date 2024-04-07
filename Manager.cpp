@@ -145,6 +145,56 @@ double Manager::edmondsKarpAllToAll(Graph<std::string>* res){
     return maxflow;
 }
 
+void Manager::balanceFlow(Graph<std::string>* graph) {
+    // Identify nodes with unmet demand
+    std::vector<Vertex<std::string>*> nodesWithUnmetDemand;
+    for (Vertex<std::string>* vertex : graph->getVertexSet()) {
+        if (vertex->getInfo()[0] == 'C') {
+            double demand = this->cities.at(vertex->getInfo()).getDemand();
+            double totalInflow = 0;
+            for (Edge<std::string>* edge : vertex->getIncoming()) {
+                totalInflow += edge->getFlow();
+            }
+            if (totalInflow < demand) {
+                nodesWithUnmetDemand.push_back(vertex);
+            }
+        }
+    }
+
+    // Calculate excess capacity for each pipe
+    std::unordered_map<Edge<std::string>*, double> excessCapacity;
+    double totalExcessCapacity = 0;
+    for (Vertex<std::string>* vertex : graph->getVertexSet()) {
+        for (Edge<std::string>* edge : vertex->getAdj()) {
+            double capacity = edge->getWeight();
+            double flow = edge->getFlow();
+            double remainingCapacity = capacity - flow;
+            if (remainingCapacity > 0) {
+                excessCapacity[edge] = remainingCapacity;
+                totalExcessCapacity += remainingCapacity;
+            }
+
+        }
+    }
+
+    // Redistribute flow
+    for (Vertex<std::string>* vertex : nodesWithUnmetDemand) {
+        double demand = this->cities.at(vertex->getInfo()).getDemand();
+        double totalInflow = 0;
+        for (Edge<std::string>* edge : vertex->getIncoming()) {
+            totalInflow += edge->getFlow();
+        }
+        for (Edge<std::string>* edge : vertex->getIncoming()) {
+            if (excessCapacity.find(edge) != excessCapacity.end()) {
+                double redistributionFactor = excessCapacity[edge] / totalExcessCapacity;
+                double additionalFlow = redistributionFactor * (demand - totalInflow);
+                double currentFlow = edge->getFlow();
+                edge->setFlow(currentFlow + additionalFlow);
+            }
+        }
+    }
+}
+
 double Manager::edmondsKarpWithoutNode(Graph<std::string>* res, std::string deactivated){
 
     Graph<std::string> graph = constructor.createGraph();

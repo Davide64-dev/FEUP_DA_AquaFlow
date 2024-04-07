@@ -108,6 +108,16 @@ public:
     double edmondsKarpAllToAll(Graph<std::string>* res);
 
     /**
+     * @brief Balances the flow in the network by redistributing excess capacity.
+     *  Nodes with unmet demand are identified, and flow redistribution is done based on the excess capacity in pipes.
+     * @param graph Pointer to the graph.
+     * @par Complexity
+       *   - Time: O(V * E)
+       *   - Space: O(V + E)
+     */
+    void balanceFlow(Graph<std::string>* graph);
+
+    /**
      * @brief Checks the differences between the total edmonds karp and the edmonds karp with a deactivate node
      * @param node Node to deactivate.
      * @param diff Map that maps the difference of flows for each city before and after the deactivation of the node
