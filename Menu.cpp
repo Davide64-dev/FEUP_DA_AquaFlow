@@ -8,24 +8,25 @@
 Menu::Menu(Manager manager) : manager(manager) {};
 
 void Menu::printIntro() {
-        std::cout << "+-----------------------------------+\n";
+        std::cout << "\n+-----------------------------------+\n";
         std::cout << "|                                   |\n";
         std::cout << "|        DA PROJECT 1 - G05_2       |\n";
         std::cout << "|                                   |\n";
-        std::cout << "+-----------------------------------+\n\n";
+        std::cout << "+-----------------------------------+\n";
 }
 
 void Menu::mainMenu() {
     int option = -1;
     while (option != 0) {
 
-        std::cout << "\t:::: MENU ::::" << std::endl;
+        std::cout << "\n\t:::: MENU ::::" << std::endl;
         std::cout << "0 - Exit" << std::endl;
         std::cout << "1 - T2.1 - Maximum amount of water that can reach each or a specific city" << std::endl;
         std::cout << "2 - T2.2 - Water Demand vs. Actual Flow" << std::endl;
-        std::cout << "3 - T3.1 - Water Reservoir Out of Comission Test" << std::endl;
-        std::cout << "4 - T3.2 - Pumping Station out of Comission Test" << std::endl;
-        std::cout << "5 - T3.3 - Pipe out of Comission Test" << std::endl;
+        std::cout << "3 - T2.3 - Heuristic Balanced Network" << std::endl;
+        std::cout << "4 - T3.1 - Water Reservoir Out of Comission Test" << std::endl;
+        std::cout << "5 - T3.2 - Pumping Station out of Comission Test" << std::endl;
+        std::cout << "6 - T3.3 - Pipe out of Comission Test" << std::endl;
         std::cout << "\nChoose an option:";
         std::cin >> option;
 
@@ -43,17 +44,20 @@ void Menu::mainMenu() {
                 break;
 
             case 3:
-                t31();
+                t23();
                 break;
 
             case 4:
-                t32();
+                t31();
                 break;
 
             case 5:
-                t33();
+                t32();
                 break;
 
+            case 6:
+                t33();
+                break;
 
             default:
                 std::cout << "Invalid option" << std::endl;
@@ -143,6 +147,141 @@ void Menu::t22(){
 
     }
     outputFile.close();
+}
+
+void Menu::t23() {
+
+    int option = 0;
+    std::cout << "Heuristic to balance the network (minimize the differences of flow to capacity on each pipe)" << std::endl;
+    std::cout << "1 - Original Network" << std::endl;
+    std::cout << "2 - Balanced Network" << std::endl;
+    std::cout << "\nChoose an option:";
+    std::cin >> option;
+
+    Graph<std::string> graph;
+    manager.edmondsKarpAllToAll(&graph);
+
+    double avg_diff = 0;
+    double max_diff = 0;
+    double counter = 0;
+    double avg_variance = 0;
+
+    switch (option) {
+        case 1:
+            std::cout << "Original Network" << std::endl;
+            std::cout << std::endl << "----- Difference between pipe's capacity and flow -----" << std::endl;
+            for (int i = 0; i < graph.getNumVertex(); i++){
+                std::string vertex_name = graph.getVertexSet()[i]->getInfo();
+                if (vertex_name == "supersource") continue;
+
+                // Go through all the edges of the vertex
+                for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++){
+                    std::string edge_name = graph.getVertexSet()[i]->getAdj()[j]->getDest()->getInfo();
+                    if (edge_name == "supersink") continue;
+
+                    double flow = graph.getVertexSet()[i]->getAdj()[j]->getFlow();
+                    double capacity = graph.getVertexSet()[i]->getAdj()[j]->getWeight();
+                    double diff = capacity - flow;
+                    avg_diff += diff;
+                    counter++;
+                    if (diff > max_diff) max_diff = diff;
+                    std::cout << vertex_name << " -> " << edge_name
+                                << " | Flow: " << flow
+                                << " | Capacity: " << capacity
+                                << " | Difference: " << diff << std::endl;
+                }
+            }
+            avg_diff /= counter;
+
+            std::cout << std::endl << "----- Variance (average of squared deviations from the mean) -----" << std::endl;
+            for (int i = 0; i < graph.getNumVertex(); i++){
+                std::string vertex_name = graph.getVertexSet()[i]->getInfo();
+                if (vertex_name == "supersource") continue;
+
+                // Go through all the edges of the vertex
+                for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++){
+                    std::string edge_name = graph.getVertexSet()[i]->getAdj()[j]->getDest()->getInfo();
+                    if (edge_name == "supersink") continue;
+
+                    double diff = graph.getVertexSet()[i]->getAdj()[j]->getWeight() - graph.getVertexSet()[i]->getAdj()[j]->getFlow();
+                    double deviation = diff - avg_diff;
+                    avg_variance += deviation * deviation;
+
+                    std::cout << vertex_name << " -> " << edge_name
+                                << " | Difference: " << diff
+                                << " | Deviation: " << deviation << std::endl;
+                }
+            }
+            avg_variance /= counter;
+
+            std::cout << std::endl << "---METRICS---" << std::endl;
+            std::cout << "Average Difference: " << avg_diff << std::endl;
+            std::cout << "Max Difference: " << max_diff << std::endl;
+            std::cout << "Variance: " << avg_variance << std::endl;
+
+            break;
+
+        case 2:
+            std::cout << "Balanced Network" << std::endl;
+            manager.balanceFlow(&graph);
+
+            std::cout << std::endl << "----- Difference between pipe's capacity and flow -----" << std::endl;
+            for (int i = 0; i < graph.getNumVertex(); i++){
+                std::string vertex_name = graph.getVertexSet()[i]->getInfo();
+                if (vertex_name == "supersource") continue;
+
+                // Go through all the edges of the vertex
+                for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++){
+                    std::string edge_name = graph.getVertexSet()[i]->getAdj()[j]->getDest()->getInfo();
+                    if (edge_name == "supersink") continue;
+
+                    double flow = graph.getVertexSet()[i]->getAdj()[j]->getFlow();
+                    double capacity = graph.getVertexSet()[i]->getAdj()[j]->getWeight();
+                    double diff = capacity - flow;
+                    avg_diff += diff;
+                    counter++;
+                    if (diff > max_diff) max_diff = diff;
+                    std::cout << vertex_name << " -> " << edge_name
+                              << " | Flow: " << flow
+                              << " | Capacity: " << capacity
+                              << " | Difference: " << diff << std::endl;
+                }
+            }
+            avg_diff /= counter;
+
+            std::cout << std::endl << "----- Variance (average of squared deviations from the mean) -----" << std::endl;
+            for (int i = 0; i < graph.getNumVertex(); i++){
+                std::string vertex_name = graph.getVertexSet()[i]->getInfo();
+                if (vertex_name == "supersource") continue;
+
+                // Go through all the edges of the vertex
+                for (int j = 0; j < graph.getVertexSet()[i]->getAdj().size(); j++){
+                    std::string edge_name = graph.getVertexSet()[i]->getAdj()[j]->getDest()->getInfo();
+                    if (edge_name == "supersink") continue;
+
+                    double diff = graph.getVertexSet()[i]->getAdj()[j]->getWeight() - graph.getVertexSet()[i]->getAdj()[j]->getFlow();
+                    double deviation = diff - avg_diff;
+                    avg_variance += deviation * deviation;
+
+                    std::cout << vertex_name << " -> " << edge_name
+                              << " | Difference: " << diff
+                              << " | Deviation: " << deviation << std::endl;
+                }
+            }
+            avg_variance /= counter;
+
+            std::cout << std::endl << "---METRICS---" << std::endl;
+            std::cout << "Average Difference: " << avg_diff << std::endl;
+            std::cout << "Max Difference: " << max_diff << std::endl;
+            std::cout << "Variance: " << avg_variance << std::endl;
+
+            break;
+
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+    }
+
 }
 
 void Menu::printCitiesDifferences(std::unordered_map<std::string, std::pair<int, int>>& res){
