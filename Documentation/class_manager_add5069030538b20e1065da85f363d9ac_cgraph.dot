@@ -1,0 +1,28 @@
+digraph "Manager::Manager"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="LR";
+  Node1 [label="Manager::Manager",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Constructor for Manager class."];
+  Node1 -> Node2 [color="steelblue1",style="solid"];
+  Node2 [label="GraphConstructor::create\lGraph",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_graph_constructor.html#adb7115eb34116290e3b6d4afdb39003a",tooltip="Creates a graph based on the provided data files."];
+  Node2 -> Node3 [color="steelblue1",style="solid"];
+  Node3 [label="City::getCode",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_city.html#a16825c4047ba8d1d516e7c537a472dd4",tooltip=" "];
+  Node2 -> Node4 [color="steelblue1",style="solid"];
+  Node4 [label="Reservoir::getCode",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_reservoir.html#ac643ed1efe410c6fb2478cc79c315dfe",tooltip="Getter for the code of the reservoir."];
+  Node2 -> Node5 [color="steelblue1",style="solid"];
+  Node5 [label="Station::getCode",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_station.html#acfc25745a46db3a0726db3826f0ff769",tooltip="Getter for the code of the station."];
+  Node2 -> Node6 [color="steelblue1",style="solid"];
+  Node6 [label="GraphConstructor::parsePipe",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_graph_constructor.html#add5afe87a17733add99ad0b111879c80",tooltip="Parses a line of input to extract pipe data."];
+  Node1 -> Node7 [color="steelblue1",style="solid"];
+  Node7 [label="GraphConstructor::getCityMap",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_graph_constructor.html#ad4516fd64d743025149b593e9c639d8a",tooltip="Retrieves a map of cities parsed from the data file."];
+  Node7 -> Node3 [color="steelblue1",style="solid"];
+  Node1 -> Node8 [color="steelblue1",style="solid"];
+  Node8 [label="GraphConstructor::getReservoirMap",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_graph_constructor.html#a29957980441967ad152b0d32eefb61ee",tooltip="Retrieves a map of reservoirs parsed from the data file."];
+  Node8 -> Node4 [color="steelblue1",style="solid"];
+  Node1 -> Node9 [color="steelblue1",style="solid"];
+  Node9 [label="GraphConstructor::getStationMap",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$class_graph_constructor.html#a166d7ec4b00f1210c1ee40a84d8f56ce",tooltip="Retrieves a map of stations parsed from the data file."];
+  Node9 -> Node5 [color="steelblue1",style="solid"];
+}
